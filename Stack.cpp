@@ -9,7 +9,7 @@ public:
   void Push(T key);
   void Pop();
   bool IsFull();
-
+void Check();
 private:
   int topindex;
   T _stack[size];
@@ -33,9 +33,21 @@ template <class T, size_t size> void Stack<T, size>::Pop() {
     return;
   }
   auto it = _stack[--topindex];
+  _stack[topindex]=T();
   std::cout << "the Pop element is " << it << '\n';
 }
 
+template <class T, size_t size> void Stack<T, size>::Check() {
+  if (topindex == 0) {
+    std::cout << "skip"<<'\n';
+    return;
+  }
+  auto flag = 0;
+  while (flag < topindex) {
+    std::cout << "the Stack exit elements " << _stack[flag] << '\n';
+    flag++;
+  }
+}
 int main() {
   Stack<int, 7> stack;
   stack.Push(4);
@@ -44,6 +56,7 @@ int main() {
   stack.Push(8);
   stack.Push(7);
   stack.Pop();
+  stack.Check();
   return 0;
 }
 /*当然这个例子还是比较简陋，多线程环境下依旧不能使用。不可否认的是，这个案例cpp又被我写成了shift,毕竟，把c的思想
