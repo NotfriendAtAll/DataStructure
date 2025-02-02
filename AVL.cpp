@@ -62,9 +62,9 @@ template <class T> int BSTtree<T>::GetHeight(TreeNode<T> *&root) {
 template <class T> void BSTtree<T>::SetHegiht(TreeNode<T> *&root) {
   int left_height = 0, right_height = 0;
   if (root->right) {
-    right_height = GetHeight(root->right);
+    left_height = GetHeight(root->right);
   } else if (root->left) {
-    left_height = GetHeight(root->left);
+    right_height = GetHeight(root->left);
   }
   root->height = std::max(left_height, right_height) + 1;
 }
@@ -95,7 +95,6 @@ template <class T> void BSTtree<T>::rrRotation(TreeNode<T> **root) {
   SetHegiht((*root)->left);
 }
 template <class T> void BSTtree<T>::llRotation(TreeNode<T> **root) {
-
   TreeNode<T> *current = (*root)->left;
   (*root)->left = current->right;
   current->right = *root;

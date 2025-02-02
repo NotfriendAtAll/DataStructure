@@ -81,4 +81,4 @@ int main() {
   printf("\n");
   return 0;
 }
-//本代码来自b站up主，@tyrantlucifer。
+// 本代码来自b站up主，@tyrantlucifer。
