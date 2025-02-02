@@ -12,16 +12,20 @@ private:
 
 class Linklist {
 public:
-  Linklist() : head(nullptr), length(0) {}
+  explicit Linklist() : head(nullptr), length(0) {}
+  ~Linklist();
   void Insert(int key);
   void Print();
   void Delete(int key);
   int GetLength();
+  void Destory();
 
 private:
   Node *head;
   int length;
 };
+
+Linklist::~Linklist() { Destory(); }
 
 void Linklist::Insert(int key) {
   Node *new_node = new Node(key, nullptr);
@@ -69,6 +73,14 @@ void Linklist::Delete(int key) {
   }
 }
 
+void Linklist::Destory() {
+  while (head) {
+    Node *temp = head;
+    head = head->_next;
+    delete temp;
+  }
+  std::cout << "资源回收";
+}
 int Linklist::GetLength() { return length; }
 int main() {
   Linklist list;
@@ -78,7 +90,7 @@ int main() {
   list.Insert(13);
   list.Insert(14);
   list.Print();
-  std::cout << "list" << list.GetLength();
+  std::cout << "list " << list.GetLength();
   return 0;
 }
 /*
