@@ -2,10 +2,14 @@
 // Created by DELL on 25-1-28.
 //
 #include <algorithm>
+#include <chrono>
 #include <cstdlib>
+#include <ctime>
+#include <exception>
 #include <iostream>
+#include <random>
 #include <vector>
-using namespace std;
+
 template <class T> class BSTtree;
 
 template <class T> class TreeNode {
@@ -13,30 +17,33 @@ public:
   template <class U> friend class BSTtree;
   TreeNode(T data)
       : height(0), _data(data), index(0), left(nullptr), right(nullptr) {}
-
+~TreeNode()=default;
 private:
   int height;
   T _data;
   int index;
-  TreeNode *left;
-  TreeNode *right;
+ TreeNode<T>*left;
+  TreeNode<T> *right;
 };
 
 template <class T> class BSTtree {
 public:
   // 所有的外部API
   BSTtree() : _root(nullptr) {}
+  ~BSTtree(){Destory(_root);}
   int GetHeight(TreeNode<T> *&root);
   bool Balance_Factors(TreeNode<T> *root);
   void rrRotation(TreeNode<T> **root);
   void llRotation(TreeNode<T> **root);
-  void Insert(TreeNode<T> *&root, const int &val);
-  TreeNode<T> *FindParent(TreeNode<T> *root, int target);
+  void Insert(TreeNode<T> *&root, const T &val);
+  TreeNode<T> *FindParent(TreeNode<T> *root, T target);
   void Preorder(TreeNode<T> *root);
   void Inorder(TreeNode<T> *root);
   void Postorder(TreeNode<T> *root);
   void SetHegiht(TreeNode<T> *&root);
+  void Destory(TreeNode<T>*root);
   void Check() { std::cout << "the root data is " << _root->_data << '\n'; }
+  void ExitTarget(TreeNode<T> *root, T target);
   TreeNode<T> *GetRoot() { return _root; }
   // 根节点
   TreeNode<T> *_root;
@@ -46,7 +53,6 @@ template <class T> bool BSTtree<T>::Balance_Factors(TreeNode<T> *root) {
   int leftheight = GetHeight(root->left);
   int rightheight = GetHeight(root->right);
   if (std::abs(leftheight - rightheight) == 2) {
-    std::cout << "yes ";
     return true;
   }
 
@@ -68,9 +74,13 @@ template <class T> void BSTtree<T>::SetHegiht(TreeNode<T> *&root) {
   }
   root->height = std::max(left_height, right_height) + 1;
 }
+
 template <class T>
-TreeNode<T> *BSTtree<T>::FindParent(TreeNode<T> *root, int target) {
-  if (root->left->_data == target || root->right->_data == target) {
+TreeNode<T> *BSTtree<T>::FindParent(TreeNode<T> *root, T target) {
+  if ((root->left != nullptr) && root->left->_data == target) {
+    return root;
+  }
+  if ((root->right != nullptr) && root->right->_data == target) {
     return root;
   } else if (root->_data < target) {
     return FindParent(root->right, target);
@@ -88,12 +98,19 @@ template <class T> void BSTtree<T>::rrRotation(TreeNode<T> **root) {
   } else {
     TreeNode<T> *parent = FindParent(_root, (*root)->_data);
     TreeNode<T> **temp = &parent;
-    (*temp)->right = current;
+    if (parent->right == *root) {
+      (*temp)->right = current;
+    } else {
+      (*temp)->left = current;
+    }
     SetHegiht(parent);
   }
   SetHegiht(current);
-  SetHegiht((*root)->left);
+  if ((*root)->right != nullptr) {
+    SetHegiht((*root)->right);
+  }
 }
+
 template <class T> void BSTtree<T>::llRotation(TreeNode<T> **root) {
   TreeNode<T> *current = (*root)->left;
   (*root)->left = current->right;
@@ -103,14 +120,20 @@ template <class T> void BSTtree<T>::llRotation(TreeNode<T> **root) {
   } else {
     TreeNode<T> *parent = FindParent(_root, (*root)->_data);
     TreeNode<T> **temp = &parent;
-    (*temp)->left = current;
+    if (parent->right == *root) {
+      (*temp)->right = current;
+    } else {
+      (*temp)->left = current;
+    }
     SetHegiht(parent);
   }
   SetHegiht(current);
-  SetHegiht((*root)->left);
+  if ((*root)->left != nullptr) {
+    SetHegiht((*root)->left);
+  }
 }
 
-template <class T> void BSTtree<T>::Insert(TreeNode<T> *&root, const int &val) {
+template <class T> void BSTtree<T>::Insert(TreeNode<T> *&root, const T &val) {
   if (root == nullptr) {
     root = new TreeNode(val);
   } else {
@@ -122,7 +145,7 @@ template <class T> void BSTtree<T>::Insert(TreeNode<T> *&root, const int &val) {
           rrRotation(&root);
         } // RL调整
         else {
-          llRotation(&root->right);
+          llRotation(&(root->right));
           rrRotation(&root);
         }
       }
@@ -137,7 +160,7 @@ template <class T> void BSTtree<T>::Insert(TreeNode<T> *&root, const int &val) {
           llRotation(&root);
         } // LR 调整
         else {
-          rrRotation(&root->left);
+          rrRotation(&(root->left));
           llRotation(&root);
         }
       }
@@ -171,21 +194,79 @@ template <class T> void BSTtree<T>::Postorder(TreeNode<T> *root) {
   Postorder(root->right);
   std::cout << root->_data << " ";
 }
+template <class T> void BSTtree<T>::ExitTarget(TreeNode<T> *root, T target) {
+  if (root->_data == target) {
+    std::cout << "Exit the target,and the index=" << root->index << std::endl;
+    return;
+  } else if (root->_data < target) {
+    FindParent(root->right, target);
+  } else {
+    FindParent(root->left, target);
+  }
+}
+template <class T>
+void BSTtree<T>:: Destory(TreeNode<T> *root){
+  if (root==nullptr) {
+  return;
+  }
+  Destory(root->left);
+  Destory(root->right);
+  delete root;
+}
+
+// 生成随机整数数据
+std::vector<int> generateRandomData(int size, int range) {
+  std::vector<int> randomNumbers;
+  try {
+    randomNumbers.reserve(size); // 预先分配空间
+    // 使用基于时间的种子（如果性能要求高）
+    auto seed =
+        std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    std::mt19937 gen(seed);
+    std::uniform_int_distribution<> dis(1, range);
+
+    for (int i = 0; i < size; ++i) {
+      randomNumbers.push_back(dis(gen));
+    }
+
+  } catch (const std::exception &e) {
+    std::cerr << "Exception is" << e.what() << std::endl;
+  }
+  return randomNumbers;
+}
+
 int main() {
+  const int datasize = 100; // 数据数量 一百万数据
+  const int dataRange = 10000; // 数据范围 1~1000000
   BSTtree<int> bst;
-  std::vector<int> test_arr{1, 2, 3, 4, 5, 6, 7, 8};
-  for (auto &it : test_arr) {
+  std::vector<int> test_arr{6, 5, 4, 3, 2, 1};
+  std::vector<int> testdata = generateRandomData(datasize, dataRange);
+  try {
+  auto start = std::chrono::high_resolution_clock::now();
+  /*for (auto &it :testdata) {
+  std::cout<<it<<' ';
+  }*/
+  // std::cout<<std::endl;
+  for (auto &it : testdata) {
     bst.Insert(bst._root, it);
   }
-  bst.Preorder(bst._root);
+  auto end = std::chrono::high_resolution_clock::now();
+  // 计算并输出插入时间
+  std::chrono::duration<double, std::milli> duration = end - start;
+  /*bst.Preorder(bst._root);
   std::cout << '\n';
   bst.Inorder(bst._root);
   std::cout << '\n';
   bst.Postorder(bst._root);
-  std::cout << '\n';
+  std::cout << '\n';*/
   auto height = bst.GetHeight(bst._root);
   std::cout << "the tree height is" << height << '\n';
   bst.Check();
   std::cout << "End" << '\n';
+  std::cout << "插入 " << datasize << " 个数据耗时: " << duration.count()
+            << " 毫秒" << std::endl;
+  } catch (std::exception&error) {
+  std::cerr<<"The exception is"<<error.what()<<std::endl;
+  }
   return 0;
 }
