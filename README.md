@@ -230,8 +230,13 @@ template <class T> void BSTtree<T>::SetHegiht(TreeNode<T> *&root) {
 ```
 ***
 ```cpp
-TreeNode<T> *BSTtree<T>::FindParent(TreeNode<T> *root, int target) {
-  if (root->left->_data == target || root->right->_data == target) {
+template <class T>
+TreeNode<T> *BSTtree<T>::FindParent(TreeNode<T> *root, T target)
+{
+if ((root->left != nullptr) && root->left->_data == target) {
+    return root;
+  }
+  if ((root->right != nullptr) && root->right->_data == target) {
     return root;
   } else if (root->_data < target) {
     return FindParent(root->right, target);
@@ -255,7 +260,7 @@ template <class T> void BSTtree<T>::Insert(TreeNode<T> *&root, const int &val) {
           rrRotation(&root);
         } // RL调整
         else {
-          llRotation(root->right);
+          llRotation(&(root->right));
           rrRotation(&root);
         }
       }
@@ -267,11 +272,11 @@ template <class T> void BSTtree<T>::Insert(TreeNode<T> *&root, const int &val) {
       // LL 调整
       if (Balance_Factors(root)) {
         if (root->left->_data > val) {
-          llRotation(root);
+          llRotation(&root);
         } // LR 调整
         else {
-          rrRotation(&root->left);
-          llRotation(root);
+          rrRotation(&(root->left));
+          llRotation(&root);
         }
       }
     }
@@ -285,10 +290,8 @@ template <class T> bool BSTtree<T>::Balance_Factors(TreeNode<T> *root) {
   int leftheight = GetHeight(root->left);
   int rightheight = GetHeight(root->right);
   if (std::abs(leftheight - rightheight) == 2) {
-    std::cout << "yes ";
     return true;
   }
-
   return false;
 }//我设置的是如果左右子树相差2，就认为树已经失衡，至于打印的内容是当时为了方便调试，观测代码
 ```
@@ -309,7 +312,9 @@ template <class T> void BSTtree<T>::rrRotation(TreeNode<T> **root) { // *root是
     SetHegiht(parent);//更新节点的高度
   }
   SetHegiht(current);//更新current节点的高度,同下
-  SetHegiht((*root)->left);
+if ((*root)->right != nullptr) {
+    SetHegiht((*root)->right);
+  }
 }
 ```
 ***
@@ -340,6 +345,15 @@ template <class T> void BSTtree<T>::rrRotation(TreeNode<T> *&root) {
 }
 ```
 ***
+来看看测试代码，务必记住释放堆内存。另外，至于为啥不用一百万数据来检测，两个原因，电脑可运行内存有限，单线程运行。
+```cpp
+const int datasize = 10000; // 数据数量 一百万数据
+  const int dataRange = 10000; // 数据范围 1~1000000
+  auto start = std::chrono::high_resolution_clock::now();
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration = end - start;
+```
+但是测试的是单线程插入十万个数据，数据范围是1~100000，插入时间大概是，1.5w多毫秒。
 ```cpp
 template <class T> void BSTtree<T>::Preorder(TreeNode<T> *root) {
   if (root == nullptr) {
