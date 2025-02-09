@@ -236,7 +236,7 @@ std::vector<int> generateRandomData(int size, int range) {
 }
 
 int main() {
-  const int datasize = 100; // 数据数量 一百万数据
+  const int datasize = 10000; // 数据数量 一百万数据
   const int dataRange = 10000; // 数据范围 1~1000000
   BSTtree<int> bst;
   std::vector<int> test_arr{6, 5, 4, 3, 2, 1};
@@ -253,12 +253,12 @@ int main() {
   auto end = std::chrono::high_resolution_clock::now();
   // 计算并输出插入时间
   std::chrono::duration<double, std::milli> duration = end - start;
-  /*bst.Preorder(bst._root);
+  bst.Preorder(bst._root);
   std::cout << '\n';
   bst.Inorder(bst._root);
   std::cout << '\n';
   bst.Postorder(bst._root);
-  std::cout << '\n';*/
+  std::cout << '\n';
   auto height = bst.GetHeight(bst._root);
   std::cout << "the tree height is" << height << '\n';
   bst.Check();
