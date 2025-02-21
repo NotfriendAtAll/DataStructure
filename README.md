@@ -14,22 +14,24 @@ The list of the project
 ---
  project
 ***
-CMakeLists.txt
+- CMakeLists.txt
 ---
 include
 ---
- 1. hello.h
+ - hello.h
  ***
 src
 ---
-   1. hello.cpp
-   2. main.cpp
+   - hello.cpp
+   - main.cpp
    ***
    build
    ---
-   cmakefiles,ninja.build,.cmake,...
+   - cmakefiles
+   - ninja.build
+   - .cmake,...
    ***
-   lib
+   - lib
    ---
 - 课外话题
 ***
@@ -506,4 +508,4 @@ void DFS(const string& startNode) {
   3. 使用栈（后进先出）实现回退机制
 - **注意**：代码中反向遍历邻居是为了匹配递归DFS的顺序
 ---
-本案例在VsCode上用Clangd编译通过。
+本案例在VsCode上用Clang编译通过。
