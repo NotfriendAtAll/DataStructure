@@ -1,6 +1,36 @@
 ## 数据结构 
 **DataStructure**
+---
 
+## Build Project
+```cpp
+mkdir build
+cmake -G Ninja -B ./build
+cd ./build
+Ninja
+.exe
+```
+The list of the project 
+---
+ project
+***
+CMakeLists.txt
+---
+include
+---
+ 1. hello.h
+ ***
+src
+---
+   1. hello.cpp
+   2. main.cpp
+   ***
+   build
+   ---
+   cmakefiles,ninja.build,.cmake,...
+   ***
+   lib
+   ---
 - 课外话题
 ***
       先盲猜一波：“学校教学的数据结构，你可能不知道用在那里，有什么用也不清楚，是吗？”
