@@ -1,4 +1,7 @@
+
 #include <iostream>
+#include <memory>
+
 class Linklist;
 class Node {
 public:
@@ -7,7 +10,7 @@ public:
 
 private:
   int _data;
-  Node *_next;
+  std::shared_ptr<Node> _next;
 };
 
 class Linklist {
@@ -21,18 +24,19 @@ public:
   void Destory();
 
 private:
-  Node *head;
+std::shared_ptr<Node> head;
   int length;
 };
 
-Linklist::~Linklist() { Destory(); }
+Linklist::~Linklist() { /*Destory();*/ }
 
-void Linklist::Insert(int key) {
-  Node *new_node = new Node(key, nullptr);
+void Linklist::Insert(int key) { 
+  auto new_node= std::make_shared<Node>(key,nullptr);
+
   if (head == nullptr) {
     head = new_node;
   } else {
-    Node *index = head;
+    auto index = head;
     while (index->_next != nullptr) {
       index = index->_next;
     }
@@ -42,7 +46,7 @@ void Linklist::Insert(int key) {
 }
 
 void Linklist::Print() {
-  Node *cur = head;
+  auto cur = head;
   while (cur != nullptr) {
     std::cout << cur->_data << "->";
     cur = cur->_next;
@@ -55,32 +59,32 @@ void Linklist::Delete(int key) {
     std::cout << "Delete Error" << '\n';
     return;
   }
-  Node *index = head;
+  auto index = head;
   if (index->_data == key) {
     if (index->_next == nullptr) {
-      delete index;
+      index.reset();
       head = nullptr;
     } else {
       while ((index->_next->_data != key) && (index->_next != nullptr)) {
         index = index->_next;
       }
-      Node *flag = index->_next;
+      auto flag = index->_next;
       index->_next = flag->_next;
       flag->_next = nullptr;
-      delete flag;
+      flag.reset();
     }
     length--;
   }
 }
 
-void Linklist::Destory() {
+/*[[deprecated("it has deprecated")]]void Linklist::Destory() {
   while (head) {
-    Node *temp = head;
+    auto temp = head;
     head = head->_next;
     delete temp;
   }
   std::cout << "资源回收";
-}
+}*/
 int Linklist::GetLength() { return length; }
 int main() {
   Linklist list;
@@ -90,11 +94,12 @@ int main() {
   list.Insert(13);
   list.Insert(14);
   list.Print();
-  std::cout << "list " << list.GetLength();
+  std::cout << "the length of list " << list.GetLength();
   return 0;
 }
 /*
-这是基于c++98的语言标准简单写的一个单链表，当然功能并不完善。
+这是基于c++98(后会稍有改动)的语言标准简单写的一个单链表，当然功能并不完善。
 你也可以用c++11的标准来实现。最好不要手动释放内存，用RAII来管理会更好。
-使用Clangd在Vscode上面编译通过。GCC和MSVC应该也可以。
+使用Clang在Vscode上面编译通过。GCC和MSVC应该也可以。
+当然，如果支持Asan，可以试试clang++ -fsantize -g -std=c++xx target.cpp -o target
 */
