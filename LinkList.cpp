@@ -16,8 +16,14 @@ private:
 class Linklist {
 public:
   explicit Linklist() : head(nullptr), length(0) {}
+  Linklist(const Linklist&)=delete;
+  Linklist(Linklist&&)=delete;
+  Linklist&  operator = (const Linklist&) = delete;
+  Linklist&  operator = ( Linklist&&) = delete;
   ~Linklist();
   void Insert(int key);
+  std::shared_ptr<Node> GetTarget(int key);
+  std::shared_ptr<Node> ReturnHead();
   void Print();
   void Delete(int key);
   int GetLength();
@@ -29,10 +35,13 @@ std::shared_ptr<Node> head;
 };
 
 Linklist::~Linklist() { /*Destory();*/ }
+  std::shared_ptr<Node> Linklist:: ReturnHead(){
+    return head;
+  }
+
 
 void Linklist::Insert(int key) { 
   auto new_node= std::make_shared<Node>(key,nullptr);
-
   if (head == nullptr) {
     head = new_node;
   } else {
@@ -43,6 +52,18 @@ void Linklist::Insert(int key) {
     index->_next = new_node;
   }
   length++;
+}
+
+[[nodiscard("can not ingore the returned")]]
+std::shared_ptr<Node> Linklist::GetTarget(int key){
+auto current=head;
+if (current){
+  return current;
+}
+while (current->_data!=key) {
+current=current->_next;
+}
+return current;
 }
 
 void Linklist::Print() {
@@ -77,14 +98,14 @@ void Linklist::Delete(int key) {
   }
 }
 
-/*[[deprecated("it has deprecated")]]void Linklist::Destory() {
+[[deprecated("it has deprecated")]]void Linklist::Destory() {
   while (head) {
     auto temp = head;
     head = head->_next;
-    delete temp;
+    temp.reset();   
   }
   std::cout << "资源回收";
-}*/
+}
 int Linklist::GetLength() { return length; }
 int main() {
   Linklist list;
