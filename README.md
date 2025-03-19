@@ -13,7 +13,7 @@ Ninja
 The list of the project 
 ---
  project
-***
+---
 - CMakeLists.txt
 ---
 include
@@ -31,7 +31,7 @@ src
    - ninja.build
    - .cmake,...
    ***
-   - lib
+   lib
    ---
 - 课外话题
 ***
