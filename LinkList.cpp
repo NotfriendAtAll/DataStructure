@@ -2,11 +2,13 @@
 #include <iostream>
 #include <memory>
 
+class MylistIterator;
 class Linklist;
 class Node
 {
    public:
     friend class Linklist;
+    friend class MylistIterator;
     Node(int data, Node* next) : _data(data), _next(next) {}
 
    private:
@@ -14,8 +16,28 @@ class Node
     std::shared_ptr<Node> _next;
 };
 
+class MylistIterator{
+        public:
+        MylistIterator(std::shared_ptr<Node> cur):current(cur){}
+        int &operator*(){return current->_data;}
+         MylistIterator& operator++(){current=current->_next;
+        return  *this;}
+          MylistIterator operator++(int){
+            auto temp=*this;
+            current=current->_next;
+            return temp;
+          }
+          bool  operator!=(const MylistIterator& other){return  current!=other.current;
+
+          }
+        
+        private:
+        std::shared_ptr<Node> current;
+    };
+
 class Linklist
 {
+    friend class MylistIterator;
    public:
     explicit Linklist() : head(nullptr), length(0) {}
     Linklist(const Linklist&) = delete;
@@ -29,12 +51,15 @@ class Linklist
     void Print();
     void Delete(int key);
     int GetLength();
-    void Destory();
-
+    void Destory(); 
+    MylistIterator begin();
+    MylistIterator end();
    private:
     std::shared_ptr<Node> head;
     int length;
 };
+
+ 
 
 Linklist::~Linklist() { /*Destory();*/ }
 std::shared_ptr<Node> Linklist::ReturnHead() { return head; }
@@ -114,6 +139,14 @@ void Linklist::Delete(int key)
     }
 }
 
+ MylistIterator Linklist::begin(){
+return MylistIterator(head);
+}
+
+MylistIterator Linklist:: end(){
+    return  MylistIterator(nullptr);
+}
+
 [[deprecated("it has deprecated")]] void Linklist::Destory()
 {
     while (head)
@@ -134,7 +167,11 @@ int main()
     list.Insert(13);
     list.Insert(14);
     list.Print();
-    std::cout << "the length of list " << list.GetLength();
+    std::cout << "the length of list " << list.GetLength()<<std::endl;
+    for (auto it :list) {
+    std::cout<<it<<"->";
+    }
+    std::cout<<"nullptr";
     return 0;
 }
 /*
