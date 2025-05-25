@@ -1,42 +1,56 @@
-## 数据结构 
+## Data Structure
 **DataStructure**
 ---
 
-## Build Project
-```cpp
+## Build Project (Linux Environment with Clang 18)
+To build the project, follow these steps:
+
+```bash
+# Step 1: Create a build directory
 mkdir build
-cmake -G Ninja -B ./build
+
+# Step 2: Generate build files using CMake with Ninja
+cmake -G Ninja -B ./build -DCMAKE_CXX_COMPILER=clang++-18
+
+# Step 3: Build the project
 cd ./build
-Ninja
-.exe
+ninja
+
+# Step 4: Run the executable
+./main
 ```
-The list of the project 
+
+### Requirements
+- **Operating System**: Linux (Ubuntu 20.04 or later recommended)
+- **Compiler**: Clang 18 (supports C++20 standard)
+- **Build System**: CMake (version 3.28 or later) with Ninja
+- **Dependencies**: Ensure `libstdc++` or `libc++` is installed for C++ standard library support.
+
 ---
- project
+
+### Project Structure
+```
+project
+├── CMakeLists.txt
+├── include
+│   └── hello.h
+├── src
+│   ├── hello.cpp
+│   ├── main.cpp
+├── build
+│   ├── cmakefiles
+│   ├── ninja.build
+│   └── other build files...
+└── lib
+```
+
 ---
-- CMakeLists.txt
----
-include
----
- - hello.h
- ***
-src
----
-   - hello.cpp
-   - main.cpp
-   ***
-   build
-   ---
-   - cmakefiles
-   - ninja.build
-   - .cmake,...
-   ***
-   lib
-   ---
-- 课外话题
+
+### Extracurricular Topics
 ***
-      先盲猜一波：“学校教学的数据结构，你可能不知道用在那里，有什么用也不清楚，是吗？”
-      但是，从狭义的角度来看，这些基础的数据结构有点类似高中学的某个知识点，就是外界的要求是，你不能不学，即便工作时用的地方不多。毕竟工作时用的 数据结构 还真和我们学的不一样，逻辑都是相通，这是事实。同时本文档仅是用于本人学习的记录，并不完善，可以说是十分不足。
+Let's make a guess: "The data structures taught in school—you might not know where to use them or what they're for, right?"  
+However, from a narrow perspective, these basic data structures are somewhat like certain knowledge points in high school—external requirements dictate that you must learn them, even if they're not frequently used at work. Indeed, the data structures used in work are different from what we learn, but the logic remains the same.  
+This document is merely a record of my learning and is far from complete; it can be said to be quite insufficient.
 ***
 - 基础数据结构
 

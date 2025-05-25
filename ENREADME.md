@@ -2,32 +2,55 @@
 **DataStructure**
 ---
 
-## Build Project
-```cpp
+## Build Project (Linux Environment with Clang 18)
+To build the project, follow these steps:
+
+```bash
+# Step 1: Create a build directory
 mkdir build
-cmake -G Ninja -B ./build
+
+# Step 2: Generate build files using CMake with Ninja
+cmake -G Ninja -B ./build -DCMAKE_CXX_COMPILER=clang++-18
+
+# Step 3: Build the project
 cd ./build
-Ninja
-.exe
+ninja
+
+# Step 4: Run the executable
+./main
 ```
-The list of the project
+
+### Requirements
+- **Operating System**: Linux (Ubuntu 20.04 or later recommended)
+- **Compiler**: Clang 18 (supports C++20 standard)
+- **Build System**: CMake (version 3.28 or later) with Ninja
+- **Dependencies**: Ensure `libstdc++` or `libc++` is installed for C++ standard library support.
+
 ---
- project
+
+### Project Structure
+```
+project
+├── CMakeLists.txt
+├── include
+│   └── hello.h
+├── src
+│   ├── hello.cpp
+│   ├── main.cpp
+├── build
+│   ├── cmakefiles
+│   ├── ninja.build
+│   └── other build files...
+└── lib
+```
+
 ---
-- CMakeLists.txt
----
-include
----
- - hello.h
- ***
-src
----
-   - hello.cpp
-   ---
-- Extracurricular Topics
+
+### Extracurricular Topics
 ***
-      Let's make a guess: "The data structures taught in school - you might not know where to use them or what they're for, right?"
-      However, from a narrow perspective, these basic data structures are somewhat like certain knowledge points in high school - external requirements dictate that you must learn them, even if they're not frequently used at work. Indeed, the data structures used in work are different from what we learn, but the logic remains the same. This document is merely a record of my learning and is far from complete; it can be said to be quite insufficient.
+Let's make a guess: "The data structures taught in school—you might not know where to use them or what they're for, right?"  
+However, from a narrow perspective, these basic data structures are somewhat like certain knowledge points in high school—external requirements dictate that you must learn them, even if they're not frequently used at work. Indeed, the data structures used in work are different from what we learn, but the logic remains the same.  
+This document is merely a record of my learning and is far from complete; it can be said to be quite insufficient.
 ***
 - Basic Data Structures
 
